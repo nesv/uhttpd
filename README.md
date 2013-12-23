@@ -21,7 +21,7 @@ example, the following will serve up the `www` folder in your home directory,
 and can be browsed by going to `http://localhost:8080`:
 
 ```
-$ uhttpd -dir=/home/user/www -addr=":8080"
+$ uhttpd -dir=/home/user/www -addr="127.0.0.1:8080"
 ```
 
 ## Installing uhttpd
