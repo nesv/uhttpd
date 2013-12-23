@@ -1,13 +1,13 @@
-package main 
+package main
 
 import (
-	"log"
 	"flag"
+	"log"
 	"net/http"
 )
 
 var (
-	ListenAddr = flag.String("addr", ":80", "The ADDRESS:PORT to listen on")
+	ListenAddr   = flag.String("addr", ":80", "The ADDRESS:PORT to listen on")
 	DocumentRoot = flag.String("dir", "", "The directory to serve up")
 )
 
