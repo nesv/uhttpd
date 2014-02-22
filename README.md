@@ -24,6 +24,30 @@ and can be browsed by going to `http://localhost:8080`:
 $ uhttpd -dir=/home/user/www -addr="127.0.0.1:8080"
 ```
 
+### Command-line flags
+
+If you run *uhttpd* with the `-help` flag, you will get the following output:
+
+	Usage of uhttpd:
+	  -addr=":80": The ADDRESS:PORT to listen on
+	  -dir="": The directory to serve up
+	  -log=false: Enable/disable logging
+	  -log-path="": Log to file (leave blank for STDOUT)
+	  -log-prefix="uhttpd": Set the logging prefix
+
+`-addr="..."` lets you set the IPv4 address and port *uhttp* listens on.
+
+`-dir="..."` tells *uhttpd* which directory to serve files out of.
+
+`-log` tells *uhttpd* to log requests for files.
+
+`-log-path="..."` is an optional flag, and lets you specify the name of a file
+to write your request logs to. If you do not specify a log file, the request
+logs are written to standard output (STDOUT).
+
+`-log-prefix="..."` is another optional flag, that lets you specify the logging
+prefix; by default, the logging prefix is "uhttpd".
+
 ## Installing uhttpd
 
 If you have the [Go](http://golang.org) toolchain installed, you can simply
