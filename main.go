@@ -50,11 +50,12 @@ func main() {
 }
 
 func LoggingHandler(w io.Writer, h http.Handler) http.Handler {
-	return loggingHandler{Writer: w, Handler: h}
+	logger := log.New(w, *LogPrefix+" ", log.LstdFlags)
+	return loggingHandler{Logger: logger, Handler: h}
 }
 
 type loggingHandler struct {
-	Writer  io.Writer
+	Logger  *log.Logger
 	Handler http.Handler
 }
 
@@ -62,5 +63,6 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 	h.Handler.ServeHTTP(w, r)
 	d := time.Since(t)
-	log.Printf("%s %s %s (%dms.)", r.Proto, r.Method, r.URL.RequestURI(), d.Nanoseconds()/1e3)
+	h.Logger.Printf("%s %s %s (%dms.)",
+		r.Proto, r.Method, r.URL.RequestURI(), d.Nanoseconds()/1e3)
 }
