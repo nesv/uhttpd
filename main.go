@@ -62,5 +62,5 @@ func (h loggingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t := time.Now()
 	h.Handler.ServeHTTP(w, r)
 	d := time.Since(t)
-	log.Printf("%s %s %s (%ds.)", r.Proto, r.Method, r.URL.RequestURI(), d.Seconds())
+	log.Printf("%s %s %s (%dms.)", r.Proto, r.Method, r.URL.RequestURI(), d.Nanoseconds()/1e3)
 }
