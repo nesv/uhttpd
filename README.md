@@ -6,6 +6,9 @@ The only thing *uhttpd* is good for, is serving static content. It has no fancy
 bells, or whistles, like virtual host, or CGI support. All it does is host
 static files out of a directory for you.
 
+If you are looking for the [uhttpd](https://wiki.openwrt.org/doc/howto/http.uhttpd) 
+that ships with OpenWRT, you are in the wrong place.
+
 ## Where would this be useful?
 
 If you do not want to set up Apache, nginx, or any other web server, just to
