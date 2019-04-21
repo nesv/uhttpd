@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# This is the maintainence launcher for the snap, make necessary runtime
+# environment changes to make the snap work here.  You may also insert
+# security confinement/deprecation/obsoletion notice of the snap here.
+
+set \
+    -o errexit \
+    -o errtrace \
+    -o nounset \
+    -o pipefail
+
+declare \
+    document_root_dir \
+    document_root_dir_default \
+    listening_port \
+    listening_part_default=80 \
+    enable_access_log \
+    enable_access_log_default=false
+
+document_root_dir="$(snapctl get document-root-dir)"
+document_root_dir_default="${SNAP_COMMON}"
+listening_port="$(snapctl get listening-port)"
+enable_access_log="$(snapctl get enable-access-log)"
+
+"${SNAP}"/bin/uhttpd \
+    -addr=":${listening_port:-${listening_part_default}}" \
+    -dir="${document_root_dir:-${document_root_dir_default}}" \
+    -log="${enable_access_log:-${enable_access_log_default}}"
