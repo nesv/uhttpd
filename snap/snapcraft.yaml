@@ -1,0 +1,110 @@
+%YAML 1.1
+---
+# Snapcraft Recipe for uhttpd
+# ------------------------------
+# This file is in the YAML data serialization format:
+# http://yaml.org
+# For the spec. of writing this file refer the following documentation:
+# * The snapcraft format
+#   https://docs.snapcraft.io/the-snapcraft-format/8337
+# * Snap Documentation
+#   https://docs.snapcraft.io
+# * Topics under the doc category in the Snapcraft Forum
+#   https://forum.snapcraft.io/c/doc
+# For support refer to the snapcraft section in the Snapcraft Forum:
+# https://forum.snapcraft.io/c/snapcraft
+name: uhttpd
+title: uhttpd
+summary: A laughably-small HTTP server
+description: |
+  The only thing uhttpd is good for, is serving static content. It has no fancy bells, or whistles, like virtual host, or CGI support. All it does is host static files out of a directory for you.
+
+  If you are looking for the [uhttpd][1] that ships with OpenWRT, you are in the wrong place.
+
+  [1]: https://wiki.openwrt.org/doc/howto/http.uhttpd
+
+  **Snap-specific Information**
+
+  Customize the listening port(Default: 80):
+
+      sudo snap set uhttpd listening-port=8080
+
+  Customize the serving directory(Default: /var/snap/uhttpd/common) (EXPERIMENTAL, likely won't work):
+
+      sudo snap set uhttpd document-root-dir=/media/USB
+
+  Toggle output of access logging(Default: false):
+
+      sudo snap set uhttpd enable-access-log=true
+
+license: MIT
+
+assumes:
+- command-chain
+adopt-info: uhttpd
+base: core
+confinement: strict
+grade: stable
+
+parts:
+  # Launcher to apply snap configuration and launch the service
+  launchers:
+    source: snap/local/launchers
+    plugin: dump
+    organize:
+      '*': bin/
+
+  # Check out the tagged release revision if it isn't promoted to the stable channel
+  # https://forum.snapcraft.io/t/selective-checkout-check-out-the-tagged-release-revision-if-it-isnt-promoted-to-the-stable-channel/10617
+  selective-checkout:
+    plugin: nil
+    build-packages:
+    - git
+    stage-snaps:
+    - selective-checkout
+    prime:
+    - -*
+
+  uhttpd:
+    after:
+    - selective-checkout
+
+    source: https://github.com/nesv/uhttpd.git
+    override-pull: |
+      set -o nounset
+
+      snapcraftctl pull
+
+      "${SNAPCRAFT_STAGE}"/scriptlets/selective-checkout
+
+    plugin: go
+    go-importpath: github.com/nesv/uhttpd
+    build-packages:
+    - gcc
+
+    organize:
+      bin/uhttpd.git: bin/uhttpd
+
+apps:
+  uhttpd:
+    adapter: full
+    command: bin/uhttpd-launch
+    daemon: simple
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+
+hooks:
+  configure:
+    plugs:
+    # We need to verify if the document root directory is accessible here
+    - home
+    - removable-media
+
+plugs:
+  # Regular file access (for hosting files under certain personal files path
+  home:
+  removable-media: # Non-A/C
+
+  # Acting as a server
+  network-bind:
